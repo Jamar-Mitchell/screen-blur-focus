@@ -42,7 +42,7 @@ class BlurOverlay(QWidget):
         super().__init__()
         self.screen_geometry = screen_geometry
         self.blur_enabled = True
-        self.opacity = 0.7  # Adjustable opacity
+        self.opacity = 0.8  # Adjustable opacity
         self.init_ui()
         
     def init_ui(self):
