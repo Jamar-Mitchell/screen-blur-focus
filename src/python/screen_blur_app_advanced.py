@@ -2,6 +2,7 @@ import sys
 import time
 import json
 import os
+import fcntl  # For file locking to prevent multiple instances
 from PyQt5.QtWidgets import (QApplication, QWidget, QSystemTrayIcon, 
                              QMenu, QAction, QSlider, QWidgetAction, 
                              QVBoxLayout, QLabel, QCheckBox, QHBoxLayout,
@@ -664,14 +665,32 @@ class ScreenBlurApp:
         
     def tray_activated(self, reason):
         """Handle tray icon clicks"""
-        if reason == QSystemTrayIcon.Trigger:
+        # Only show menu on right-click (Context) or double-click (DoubleClick)
+        # Don't show on single left-click (Trigger) to avoid the double menu issue
+        if reason == QSystemTrayIcon.Context:
             self.system_tray.contextMenu().exec_(QCursor.pos())
+        elif reason == QSystemTrayIcon.DoubleClick:
+            # Double-click can toggle blur on/off
+            self.toggle_blur(not self.enabled)
             
     def quit(self):
         """Clean shutdown"""
         self.save_settings()
-        self.mouse_monitor.stop()
-        self.mouse_monitor.wait()
+        
+        # Hide and cleanup system tray
+        if hasattr(self, 'system_tray'):
+            self.system_tray.hide()
+            self.system_tray.setVisible(False)
+        
+        # Stop mouse monitor
+        if hasattr(self, 'mouse_monitor'):
+            self.mouse_monitor.stop()
+            self.mouse_monitor.wait()
+        
+        # Hide all overlays
+        for overlay in self.overlays:
+            overlay.hide()
+            
         self.app.quit()
         
     def run(self):
@@ -779,6 +798,15 @@ class ScreenBlurApp:
         self.backup_screen_check()
 
 if __name__ == "__main__":
+    # Prevent multiple instances
+    lock_file = "/tmp/screen_blur_app.lock"
+    try:
+        lock_fd = open(lock_file, 'w')
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except IOError:
+        print("Another instance of Screen Blur App is already running.")
+        sys.exit(1)
+    
     print("Script started...")
     
     # Check if system tray is available
@@ -803,3 +831,11 @@ if __name__ == "__main__":
         import traceback
         traceback.print_exc()
         sys.exit(1)
+    finally:
+        # Clean up lock file
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
+            lock_fd.close()
+            os.unlink(lock_file)
+        except:
+            pass
