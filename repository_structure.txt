@@ -1,0 +1,30 @@
+screen-blur-focus/
+├── .github/
+│   ├── workflows/
+│   │   └── build.yml
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
+│   └── pull_request_template.md
+├── docs/
+│   ├── images/
+│   │   ├── logo.png
+│   │   └── demo.gif
+│   └── ARCHITECTURE.md
+├── src/
+│   ├── python/
+│   │   ├── screen_blur_app.py
+│   │   ├── screen_blur_app_advanced.py
+│   │   ├── build_executable.py
+│   │   └── tests/
+│   │       └── test_blur_app.py
+│   └── electron/
+│       ├── electron-main.js
+│       ├── overlay.html
+│       ├── package.json
+│       └── icon.png
+├── .gitignore
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+└── requirements.txt

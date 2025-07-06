@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+    }
+    #blur-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0);
+      transition: background 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="blur-overlay"></div>
+  <script>
+    const { ipcRenderer } = require('electron');
+    const overlay = document.getElementById('blur-overlay');
+
+    ipcRenderer.on('set-blur', (event, enabled, opacity) => {
+      if (enabled) {
+        overlay.style.background = `rgba(0, 0, 0, ${opacity})`;
+      } else {
+        overlay.style.background = 'rgba(0, 0, 0, 0)';
+      }
+    });
+  </script>
+</body>
+</html>

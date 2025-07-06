@@ -1,0 +1,19 @@
+# Instructions for building executables
+
+## Windows
+1. Install PyInstaller: pip install pyinstaller
+2. Create icon file: app_icon.ico
+3. Run: python build_executable.py
+4. Executable will be in dist/ScreenBlur.exe
+
+## macOS
+1. Install PyInstaller: pip install pyinstaller
+2. Create icon file: app_icon.icns
+3. Run: python build_executable.py
+4. App bundle will be in dist/ScreenBlur.app
+
+## Linux
+1. Install PyInstaller: pip install pyinstaller
+2. Create icon file: app_icon.png
+3. Run: python build_executable.py
+4. Executable will be in dist/ScreenBlur
